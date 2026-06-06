@@ -1,0 +1,5 @@
+acmecse
+requests
+flask
+zeroconf
+python-dotenv

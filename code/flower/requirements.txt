@@ -1,0 +1,7 @@
+acmecse
+flask
+requests
+python-dotenv
+zeroconf
+tinydb
+websockets

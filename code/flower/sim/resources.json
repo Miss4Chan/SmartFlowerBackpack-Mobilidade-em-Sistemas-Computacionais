@@ -1,0 +1,9 @@
+{
+  "ae": "cse-mn-flower-3/SmartFlower",
+  "containers": {
+    "soil_moisture": "cnt7cs0zw4E8k",
+    "water_level": "cntAkTCPLKHZk",
+    "pump_status": "cntTtQVCbBZks",
+    "heartbeat": "cntlYyuDqbXtG"
+  }
+}

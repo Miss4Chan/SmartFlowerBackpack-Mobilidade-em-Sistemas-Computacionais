@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f4f8;
+      color: #2d3748;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2f855a;
+      color: #fff;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    header h1 { font-size: 1.4rem; font-weight: 600; }
+    header span.logo { font-size: 1.6rem; }
+
+    #status {
+      margin-left: auto;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      opacity: 0.9;
+    }
+    #status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #68d391;
+      transition: background 0.3s;
+    }
+    #status-dot.disconnected { background: #fc8181; }
+    #status-dot.connecting   { background: #f6e05e; }
+
+    /* ── tabs ──────────────────────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      background: #276749;
+      padding: 0 2rem;
+    }
+    .tab-btn {
+      padding: 0.55rem 1.2rem;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active { color: #fff; border-bottom-color: #68d391; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── grids ─────────────────────────────────────────────────────── */
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding: 2rem;
+      justify-content: center;
+    }
+
+    /* ── shared card styles ─────────────────────────────────────────── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      width: 340px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 1rem 1.25rem 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .device-icon { font-size: 1.8rem; }
+    .card-title  { flex: 1; }
+    .card-title h2    { font-size: 1.05rem; font-weight: 600; }
+    .card-title small { font-size: 0.72rem; color: #718096; }
+
+    .badge {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-ok      { background: #c6f6d5; color: #276749; }
+    .badge-low     { background: #fefcbf; color: #744210; }
+    .badge-alert   { background: #fed7d7; color: #9b2335; }
+    .badge-na      { background: #e2e8f0; color: #718096; }
+    .badge-offline { background: #e2e8f0; color: #718096; }
+
+    .sensors { padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.9rem; }
+    .sensor-row label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #4a5568;
+      margin-bottom: 0.3rem;
+    }
+    .sensor-row label span:last-child { font-weight: 600; color: #2d3748; }
+
+    .bar-track {
+      height: 10px;
+      background: #edf2f7;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease, background 0.4s ease;
+    }
+
+    /* ── pump row (Flower View only) ────────────────────────────────── */
+    .pump-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #4a5568;
+    }
+    .pump-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .pump-on  .pump-dot { background: #f6993f; box-shadow: 0 0 6px #f6993f88; }
+    .pump-off .pump-dot { background: #cbd5e0; }
+    .pump-on  .pump-label { color: #c05621; font-weight: 600; }
+
+    /* ── chart section (Flower View only) ───────────────────────────── */
+    .chart-section {
+      padding: 0 1.25rem 1.25rem;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 0.25rem;
+    }
+    .chart-section h3 {
+      font-size: 0.72rem;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0.75rem 0 0.5rem;
+    }
+    .chart-wrap { position: relative; height: 90px; }
+
+    .card-footer {
+      padding: 0.5rem 1.25rem 0.75rem;
+      font-size: 0.7rem;
+      color: #a0aec0;
+      border-top: 1px solid #f7fafc;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #a0aec0;
+      font-size: 1rem;
+    }
+    .no-data span { font-size: 3rem; display: block; margin-bottom: 1rem; }
+
+    .card-offline {
+      opacity: 0.55;
+      filter: grayscale(0.7);
+      transition: opacity 0.4s, filter 0.4s;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">🌿</span>
+  <h1>Virtual butler dashboard</h1>
+  <div id="status">
+    <div id="status-dot" class="connecting"></div>
+    <span id="status-text">Connecting…</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('generic')">Generic View</button>
+  <button class="tab-btn"       onclick="switchTab('flower')">Flower View</button>
+</div>
+
+<div id="tab-generic" class="tab-panel active">
+  <div id="grid-generic" class="grid"></div>
+</div>
+<div id="tab-flower" class="tab-panel">
+  <div id="grid-flower" class="grid"></div>
+</div>
+
+<script>
+  // ── tab switcher ─────────────────────────────────────────────────────────
+  let activeTab = "generic";
+  function switchTab(name) {
+    activeTab = name;
+    document.querySelectorAll(".tab-btn").forEach((b, i) => {
+      b.classList.toggle("active", ["generic","flower"][i] === name);
+    });
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    document.getElementById(`tab-${name}`).classList.add("active");
+  }
+
+  // ── shared state ─────────────────────────────────────────────────────────
+  const flowerCharts = {};   // flower_id → Chart (Flower View)
+  const OFFLINE_S    = 30;  // seconds — browser-side clock, set when SSE arrives
+
+  // ── offline sweep (runs every second) ────────────────────────────────────
+  function checkOffline() {
+    const nowS = Date.now() / 1000;
+    ["generic","flower"].forEach(tab => {
+      document.querySelectorAll(`#grid-${tab} .card[data-fid]`).forEach(card => {
+        const ts      = parseFloat(card.dataset.lastUpdate || "0");
+        const offline = ts === 0 || (nowS - ts) > OFFLINE_S;
+        card.classList.toggle("card-offline", offline);
+        if (offline) {
+          card.querySelector(".badge").textContent = "OFFLINE";
+          card.querySelector(".badge").className   = "badge badge-offline";
+          const footer = card.querySelector(".card-footer");
+          if (footer) footer.textContent = "Disconnected";
+        }
+      });
+    });
+  }
+  setInterval(checkOffline, 1000);
+
+  // ── colour helpers ────────────────────────────────────────────────────────
+  function soilColour(v) {
+    if (v >= 50) return "#48bb78";
+    if (v >= 30) return "#ecc94b";
+    return "#fc8181";
+  }
+  function waterColour(v) {
+    if (v > 20) return "#4299e1";
+    if (v > 0)  return "#ecc94b";
+    return "#fc8181";
+  }
+  function genericBarColour(v) {
+    if (v >= 50) return "#48bb78";
+    if (v >= 20) return "#ecc94b";
+    return "#fc8181";
+  }
+  function flowerBadge(s, alerted) {
+    if (alerted) return ["ALERT", "badge-alert"];
+    const w = parseFloat(s.water_level ?? 100);
+    if (isNaN(w))  return ["N/A",   "badge-na"];
+    if (w <= 0)    return ["EMPTY", "badge-alert"];
+    if (w <= 20)   return ["LOW",   "badge-low"];
+    return               ["OK",    "badge-ok"];
+  }
+  function genericBadge(alerted) {
+    return alerted ? ["ALERT", "badge-alert"] : ["OK", "badge-ok"];
+  }
+  function fmtLabel(key) {
+    return key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  // ── chart (Flower View) ───────────────────────────────────────────────────
+  function makeChart(canvasId, history) {
+    const ctx = document.getElementById(canvasId).getContext("2d");
+    return new Chart(ctx, {
+      type: "line",
+      data: {
+        labels:   history.map(p => p.t),
+        datasets: [{
+          data:            history.map(p => p.v),
+          borderColor:     "#4299e1",
+          backgroundColor: "rgba(66,153,225,0.1)",
+          borderWidth:     2,
+          pointRadius:     2,
+          tension:         0.3,
+          fill:            true,
+        }]
+      },
+      options: {
+        animation:  false,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { mode: "index" } },
+        scales: {
+          x: { display: false },
+          y: {
+            min: 0, max: 100,
+            ticks: { font: { size: 9 }, color: "#a0aec0", maxTicksLimit: 4 },
+            grid:  { color: "#f0f4f8" },
+          }
+        }
+      }
+    });
+  }
+  function updateChart(flowerId, history) {
+    const ch = flowerCharts[flowerId];
+    if (!ch) return;
+    ch.data.labels           = history.map(p => p.t);
+    ch.data.datasets[0].data = history.map(p => p.v);
+    ch.update("none");
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // GENERIC VIEW
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  function genericCardHtml(flowerId, flower) {
+    const safeId             = flowerId.replace(/[^a-z0-9]/gi, "_");
+    const [badgeText, bCls]  = genericBadge(flower.alerted);
+    const s                  = flower.state || {};
+    const rows = Object.entries(s).map(([key, rawVal]) => {
+      const num     = parseFloat(rawVal);
+      const isPureNum = /^-?\d+(\.\d+)?$/.test(rawVal.trim());
+      const display   = isPureNum
+                      ? (rawVal.includes('.') ? num.toFixed(1) : rawVal)
+                      : rawVal;
+      return `
+      <div class="sensor-row">
+        <label>
+          <span>${fmtLabel(key)}</span>
+          <span>${display}</span>
+        </label>
+      </div>`;
+    }).join("");
+
+    return `
+    <div class="card" id="gen-card-${safeId}" data-fid="${flowerId}" data-last-update="0">
+      <div class="card-header">
+        <span class="device-icon">📡</span>
+        <div class="card-title">
+          <h2>${flower.name}</h2>
+          <small>${flowerId}</small>
+        </div>
+        <span class="badge ${bCls}">${badgeText}</span>
+      </div>
+      <div class="sensors" id="gen-sensors-${safeId}">${rows}</div>
+      <div class="card-footer" id="gen-footer-${safeId}">Last update: —</div>
+    </div>`;
+  }
+
+  function renderGeneric(data) {
+    const grid = document.getElementById("grid-generic");
+    const ids  = Object.keys(data);
+    if (ids.length === 0) {
+      grid.innerHTML = `<div class="no-data"><span>📡</span>No devices connected yet…</div>`;
+      return;
+    }
+    ids.forEach(fid => {
+      const flower   = data[fid];
+      const safeId   = fid.replace(/[^a-z0-9]/gi, "_");
+      const cardId   = `gen-card-${safeId}`;
+      const [badgeText, bCls] = genericBadge(flower.alerted);
+      const tsEpoch  = flower.last_update || 0;
+      const tsLabel  = tsEpoch ? new Date(tsEpoch * 1000).toLocaleTimeString() : "—";
+      const s        = flower.state || {};
+      // offline = server never sent data; recency is handled by checkOffline()
+      const offline  = tsEpoch === 0;
+
+      let card = document.getElementById(cardId);
+      if (!card) {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = genericCardHtml(fid, flower);
+        grid.appendChild(wrapper.firstElementChild);
+        card = document.getElementById(cardId);
+      }
+
+      // Use browser clock to avoid server/browser skew; only stamp when the
+      // server has real data (tsEpoch > 0).
+      if (tsEpoch > 0) card.dataset.lastUpdate = Date.now() / 1000;
+
+      if (!offline) {
+        card.classList.remove("card-offline");
+        card.querySelector(".badge").textContent = badgeText;
+        card.querySelector(".badge").className   = `badge ${bCls}`;
+        document.getElementById(`gen-footer-${safeId}`).textContent = `Last update: ${tsLabel}`;
+
+        // Rebuild sensor rows in-place
+        const sensorsDiv = document.getElementById(`gen-sensors-${safeId}`);
+        sensorsDiv.innerHTML = Object.entries(s).map(([key, rawVal]) => {
+          const num       = parseFloat(rawVal);
+          const isPureNum = /^-?\d+(\.\d+)?$/.test(rawVal.trim());
+          const display   = isPureNum
+                          ? (rawVal.includes('.') ? num.toFixed(1) : rawVal)
+                          : rawVal;
+          return `
+          <div class="sensor-row">
+            <label><span>${fmtLabel(key)}</span><span>${display}</span></label>
+          </div>`;
+        }).join("");
+      }
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // FLOWER VIEW (fixed soil / water / pump layout)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  function flowerCardHtml(flowerId, flower) {
+    const s      = flower.state || {};
+    const soil   = parseFloat(s.soil_moisture);
+    const water  = parseFloat(s.water_level);
+    const pump   = parseInt(s.pump_status ?? 0, 10);
+    const [badgeText, bCls] = flowerBadge(s, flower.alerted);
+    const safeId   = flowerId.replace(/[^a-z0-9]/gi, "_");
+    const canvasId = `chart-${safeId}`;
+
+    return `
+    <div class="card" id="fv-card-${safeId}" data-fid="${flowerId}" data-last-update="0">
+      <div class="card-header">
+        <span class="device-icon">🌱</span>
+        <div class="card-title">
+          <h2>${flower.name}</h2>
+          <small>${flowerId}</small>
+        </div>
+        <span class="badge ${bCls}">${badgeText}</span>
+      </div>
+
+      <div class="sensors">
+        <div class="sensor-row">
+          <label>
+            <span>🌍 Soil Moisture</span>
+            <span>${isNaN(soil) ? "—" : soil.toFixed(1) + "%"}</span>
+          </label>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${isNaN(soil) ? 0 : Math.min(100,Math.max(0,soil))}%;background:${soilColour(soil)};"></div>
+          </div>
+        </div>
+
+        <div class="sensor-row">
+          <label>
+            <span>💧 Water Level</span>
+            <span>${isNaN(water) ? "—" : water.toFixed(1) + "%"}</span>
+          </label>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${isNaN(water) ? 0 : Math.min(100,Math.max(0,water))}%;background:${waterColour(water)};"></div>
+          </div>
+        </div>
+
+        <div class="sensor-row pump-row ${pump ? "pump-on" : "pump-off"}">
+          <span>⚡ Pump</span>
+          <span><span class="pump-dot"></span><span class="pump-label">${pump ? "ON" : "OFF"}</span></span>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <h3>Water Level History</h3>
+        <div class="chart-wrap">
+          <canvas id="${canvasId}"></canvas>
+        </div>
+      </div>
+
+      <div class="card-footer" id="fv-footer-${safeId}">Last update: —</div>
+    </div>`;
+  }
+
+  function renderFlower(data) {
+    const grid = document.getElementById("grid-flower");
+    const ids  = Object.keys(data);
+    if (ids.length === 0) {
+      grid.innerHTML = `<div class="no-data"><span>🌱</span>No flowers connected yet…</div>`;
+      return;
+    }
+    ids.forEach(fid => {
+      const flower  = data[fid];
+      const safeId  = fid.replace(/[^a-z0-9]/gi, "_");
+      const cardId  = `fv-card-${safeId}`;
+      const s       = flower.state || {};
+      const soil    = parseFloat(s.soil_moisture);
+      const water   = parseFloat(s.water_level);
+      const pump    = parseInt(s.pump_status ?? 0, 10);
+      const [badgeText, bCls] = flowerBadge(s, flower.alerted);
+      const tsEpoch = flower.last_update || 0;
+      const tsLabel = tsEpoch ? new Date(tsEpoch * 1000).toLocaleTimeString() : "—";
+      const canvasId = `chart-${safeId}`;
+      // offline = server never sent data; recency is handled by checkOffline()
+      const offline = tsEpoch === 0;
+
+      let card = document.getElementById(cardId);
+      if (!card) {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = flowerCardHtml(fid, flower);
+        grid.appendChild(wrapper.firstElementChild);
+        const wh = (flower.history || {}).water_level || [];
+        flowerCharts[fid] = makeChart(canvasId, wh);
+        card = document.getElementById(cardId);
+      }
+
+      // Use browser clock to avoid server/browser skew; only stamp when the
+      // server has real data (tsEpoch > 0).
+      if (tsEpoch > 0) card.dataset.lastUpdate = Date.now() / 1000;
+
+      if (!offline) {
+        card.classList.remove("card-offline");
+        card.querySelector(".badge").textContent = badgeText;
+        card.querySelector(".badge").className   = `badge ${bCls}`;
+        document.getElementById(`fv-footer-${safeId}`).textContent = `Last update: ${tsLabel}`;
+      }
+
+      const bars = card.querySelectorAll(".bar-fill");
+      bars[0].style.width      = `${isNaN(soil)  ? 0 : Math.min(100, Math.max(0, soil))}%`;
+      bars[0].style.background = soilColour(soil);
+      bars[1].style.width      = `${isNaN(water) ? 0 : Math.min(100, Math.max(0, water))}%`;
+      bars[1].style.background = waterColour(water);
+
+      const vals = card.querySelectorAll(".sensor-row label span:last-child");
+      vals[0].textContent = isNaN(soil)  ? "—" : soil.toFixed(1)  + "%";
+      vals[1].textContent = isNaN(water) ? "—" : water.toFixed(1) + "%";
+
+      const pumpRow = card.querySelector(".pump-row");
+      pumpRow.className = `sensor-row pump-row ${pump ? "pump-on" : "pump-off"}`;
+      pumpRow.querySelector(".pump-label").textContent = pump ? "ON" : "OFF";
+
+      updateChart(fid, (flower.history || {}).water_level || []);
+    });
+  }
+
+  // ── master render (updates both tabs) ────────────────────────────────────
+  function render(data) {
+    renderGeneric(data);
+    renderFlower(data);
+  }
+
+  // ── SSE connection ────────────────────────────────────────────────────────
+  function setStatus(state, text) {
+    const dot = document.getElementById("status-dot");
+    dot.className = state === "live" ? "" : state;
+    document.getElementById("status-text").textContent = text;
+  }
+
+  function connect() {
+    setStatus("connecting", "Connecting…");
+    const es = new EventSource("/stream");
+    es.onopen = () => setStatus("live", "Live");
+    es.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        render(data);
+        setStatus("live", "Live · " + new Date().toLocaleTimeString());
+      } catch { /* ignore malformed frames */ }
+    };
+    es.onerror = () => {
+      setStatus("disconnected", "Reconnecting…");
+      es.close();
+      setTimeout(connect, 3000);
+    };
+  }
+
+  connect();
+</script>
+</body>
+</html>

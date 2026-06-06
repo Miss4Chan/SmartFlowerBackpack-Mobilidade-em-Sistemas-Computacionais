@@ -1,0 +1,29 @@
+[Unit]
+Description=SmartFlower main loop
+# Wait for the network so mDNS and the butler can connect
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=admin
+WorkingDirectory=/home/admin/Desktop/acme-cse/SmartFlowerBackpack/code/flower
+ExecStart=/bin/bash /home/admin/Desktop/acme-cse/SmartFlowerBackpack/code/flower/scripts/start_rpi.sh
+Environment=PYTHONUNBUFFERED=1
+
+# Restart automatically on any failure; wait 10 s before retrying
+# so a hard crash doesn't spin in a tight loop
+Restart=on-failure
+RestartSec=10
+
+# All stdout/stderr goes to journald — read with:
+#   journalctl -u smartflower.service -f
+StandardOutput=journal
+StandardError=journal
+
+# Give Python time to run actuators.cleanup() and leave the pump in a safe state
+KillSignal=SIGTERM
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

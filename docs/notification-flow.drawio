@@ -1,0 +1,178 @@
+<mxfile host="65bd71144e">
+    <diagram id="notification-flow" name="Notification Flow">
+        <mxGraphModel dx="2965" dy="3253" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="55" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-40" y="-40" width="1400" height="1000" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Notification Flow — Sensor → ACME → Butler → Dashboard / Telegram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=15;" parent="1" vertex="1">
+                    <mxGeometry y="10" width="1400" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="RPi Hardware" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="55" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Flower app&lt;br&gt;(main + side)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="55" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Flower ACME&lt;br&gt;(:808N)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="55" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Butler Notifier&lt;br&gt;(:5000)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="55" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Butler ACME&lt;br&gt;(:8082)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="790" y="55" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="Web Browser&lt;br&gt;(SSE)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="990" y="55" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="Telegram API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="1190" y="55" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" style="edgeStyle=none;html=1;dashed=1;strokeColor=#82b366;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="90" y="105" as="sourcePoint"/>
+                        <mxPoint x="90" y="890" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" style="edgeStyle=none;html=1;dashed=1;strokeColor=#82b366;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="260" y="105" as="sourcePoint"/>
+                        <mxPoint x="260" y="890" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" style="edgeStyle=none;html=1;dashed=1;strokeColor=#82b366;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="450" y="105" as="sourcePoint"/>
+                        <mxPoint x="450" y="890" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="23" style="edgeStyle=none;html=1;dashed=1;strokeColor=#6c8ebf;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="650" y="105" as="sourcePoint"/>
+                        <mxPoint x="650" y="890" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" style="edgeStyle=none;html=1;dashed=1;strokeColor=#6c8ebf;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="850" y="105" as="sourcePoint"/>
+                        <mxPoint x="850" y="890" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" style="edgeStyle=none;html=1;dashed=1;strokeColor=#6c8ebf;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1050" y="105" as="sourcePoint"/>
+                        <mxPoint x="1050" y="890" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" style="edgeStyle=none;html=1;dashed=1;strokeColor=#6c8ebf;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1250" y="105" as="sourcePoint"/>
+                        <mxPoint x="1250" y="890" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="p1" value="1. Read sensors + pump decision (every 2 s)" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="135" width="1240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="ADC / I2C read" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#82b366;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="90" y="165" as="sourcePoint"/>
+                        <mxPoint x="260" y="165" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="GPIO pump ON / OFF" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#82b366;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="260" y="195" as="sourcePoint"/>
+                        <mxPoint x="90" y="195" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="p2" value="2. POST CINs to flower ACME  (order: pump_status → soil_moisture → water_level)" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="235" width="1240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="POST CIN  con=value  (×3)" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#82b366;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="260" y="265" as="sourcePoint"/>
+                        <mxPoint x="450" y="265" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="p3" value="3.&amp;nbsp; Flower ACME fires syntactical SUB → butler notifier" style="text;html=1;strokeColor=none;fillColor=#d5e8d4;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="305" width="1240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="POST /notify/N/&lt;container&gt;  (m2m:sgn body)" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#CC0000;fontColor=#CC0000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="450" y="335" as="sourcePoint"/>
+                        <mxPoint x="650" y="335" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="p4" value="4.&amp;nbsp; Notifier records value, mirrors CIN to butler ACME, pushes SSE" style="text;html=1;strokeColor=none;fillColor=#dae8fc;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="375" width="1240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="POST CIN to mirror container" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#6c8ebf;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="650" y="405" as="sourcePoint"/>
+                        <mxPoint x="850" y="405" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="44" value="SSE push (debounced 150 ms)" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#FF8000;fontColor=#FF8000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="650" y="435" as="sourcePoint"/>
+                        <mxPoint x="1050" y="435" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="p5" value="5. Butler ACME fires self-SUB → threshold check" style="text;html=1;strokeColor=none;fillColor=#dae8fc;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="475" width="1230" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="POST /self-notify/N/&lt;container&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#9900CC;fontColor=#9900CC;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="850" y="505" as="sourcePoint"/>
+                        <mxPoint x="650" y="505" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="p6" value="6. If value ≤ alertThreshold (from SAREF) → Telegram alert" style="text;html=1;strokeColor=none;fillColor=#dae8fc;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="550" width="1240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="POST sendMessage" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#007700;fontColor=#007700;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="650" y="580" as="sourcePoint"/>
+                        <mxPoint x="1250" y="580" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="48" value="repeat every 30 min while critical  /  auto-clear on recovery" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#007700;fontColor=#007700;dashed=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="650" y="610" as="sourcePoint"/>
+                        <mxPoint x="1250" y="610" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="sep" value="" style="line;strokeWidth=1;strokeColor=#b85450;fillColor=none;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="660" width="1300" height="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="sidelabel" value="Side loop — every 10 s (independent thread)" style="text;html=1;strokeColor=none;fillColor=#f8cecc;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="678" width="400" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="read water level" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#CC0000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="90" y="710" as="sourcePoint"/>
+                        <mxPoint x="260" y="710" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="52" value="[water ≤ 10%]  force pump OFF  +  POST water_level CIN" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#CC0000;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="260" y="740" as="sourcePoint"/>
+                        <mxPoint x="450" y="740" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="53" value="same chain as 3. → 4. → 5. → 6. above" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="505" y="730" width="350" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="POST heartbeat CIN (every 2 min)" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#888888;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="260" y="775" as="sourcePoint"/>
+                        <mxPoint x="450" y="775" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

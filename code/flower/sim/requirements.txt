@@ -1,0 +1,3 @@
+requests
+zeroconf
+python-dotenv
